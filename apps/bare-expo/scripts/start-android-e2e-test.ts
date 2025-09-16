@@ -12,6 +12,7 @@ import {
   getStartMode,
   retryAsync,
   getMaestroFlowFilePath,
+  runCustomMaestroFlowsAsync,
 } from './lib/e2e-common';
 
 const APP_ID = 'dev.expo.payments';
@@ -46,12 +47,10 @@ const __dirname = dirname(__filename);
           `No connected Android device found. In CI, it should be started via the 'Use Android Emulator' action.`
         );
       }
-      await testAsync(
-        path.join(projectRoot, 'e2e/video-e2e.yaml'),
-        deviceId,
-        appBinaryPath,
-        adbPath
+      await runCustomMaestroFlowsAsync(projectRoot, (maestroFlowFilePath) =>
+        testAsync(maestroFlowFilePath, deviceId, appBinaryPath, adbPath)
       );
+
       // const maestroFlowFilePath = getMaestroFlowFilePath(projectRoot);
       // await createMaestroFlowAsync({
       //   appId: APP_ID,
