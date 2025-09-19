@@ -12,7 +12,6 @@ import {
   ensureDirAsync,
   getStartMode,
   retryAsync,
-  getMaestroFlowFilePath,
   runCustomMaestroFlowsAsync,
 } from './lib/e2e-common';
 
@@ -48,17 +47,15 @@ const __dirname = dirname(__filename);
         testAsync(maestroFlowFilePath, deviceId, appBinaryPath, e2eDir)
       );
 
-      // const maestroFlowFilePath = getMaestroFlowFilePath(projectRoot);
-      // await createMaestroFlowAsync({
-      //   appId: APP_ID,
-      //   workflowFile: maestroFlowFilePath,
-      //   confirmFirstRunPrompt: true,
-      // });
-      //
-      // await retryAsync((retryNumber) => {
-      //   console.log(`Test suite attempt ${retryNumber + 1} of ${NUM_OF_RETRIES}`);
-      //   return testAsync(maestroFlowFilePath, deviceId, appBinaryPath);
-      // }, NUM_OF_RETRIES);
+      const maestroNativeModulesFlowFilePath = await createMaestroFlowAsync({
+        appId: APP_ID,
+        e2eDir,
+      });
+
+      await retryAsync((retryNumber) => {
+        console.log(`Test suite attempt ${retryNumber + 1} of ${NUM_OF_RETRIES}`);
+        return testAsync(maestroNativeModulesFlowFilePath, deviceId, appBinaryPath, e2eDir);
+      }, NUM_OF_RETRIES);
     }
   } catch (e) {
     console.error('Uncaught Error', e);
